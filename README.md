@@ -37,6 +37,8 @@ The algorithm used here is implemented under Parallel Computing Paradigm of MISD
 
 2) #pragma omp for: It instructs the compiler to distribute loop iterations within the team of threads that encounter the enclosed instructions.
 
+Above directives are used to provide for parallel computing which boost the performance of the code.
+
 To get a breifing of Parallel Computing: https://hpc.llnl.gov/training/tutorials/introduction-parallel-computing-tutorial
 
 Similar models are heavily used in spam filtering application, and broadly, for making sense of any unlabeled data.
