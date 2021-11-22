@@ -1,5 +1,5 @@
 # Incremental Clustering
-Implemented the Unsupervised Machine Learning Algorithm of K-Means Clustering incrementally, improving resource utilization in terms of speed and space. Used OpenMP Library to design a parallelized, multithreaded model in a MISD Parallel Computing System further increasing the speed of execution.
+Implemented the Unsupervised Machine Learning Algorithm of K-Means Clustering incrementally, improving resource utilization in terms of speed and space. Used OpenMP Library to design a parallelized, multithreaded model in a shared memory Parallel Computing System further increasing the speed of execution.
 
 WHAT IS CLUSTERING?
 
@@ -31,7 +31,7 @@ This process is iteratively repeated until our centroids become static. This pro
  
 In the C++ program, I developed a data structure to store the data as co-ordinates and an additional part is allocated as cluster ID to store its association with a certain cluster. The data is provided as a string. The data from the string is streamed into the defined data structures. Then, the algorithm designed takes over and produces clusters and allocates the data to respective clusters and updates the centroids iteratively. The dynamic data entry is inputted after the initial implementation of the clustering algorithm. The entry is allocated the respective cluster incrementally by utilizing the previous allocations saving us resources in terms of space and time.
 
-The algorithm used here is implemented under Parallel Computing Paradigm of MISD (Multiple Instruction Single Data), shared memory Parallel Computing System. The OpenMP directives of:
+The algorithm used here is implemented under shared memory Parallel Computing System. Using the OpenMP directives of:
 
 1) #pragma omp parallel: It instructs the compiler to parallelize the enclosed block of code. Here, we are also assigning shared data, to be shared across all the parallel threads, and private data, to declare the data which is limited to the scope of the individual thread only.
 
