@@ -62,6 +62,7 @@ int centroid(vector<point> &a,vector<point> &c){
             if(a[i].f==j){s1+=a[i].sf;s2+=a[i].ss;q++;}
         }
         s1=s1/q;  s2=s2/q;
+	    #pragma omp critical
         if(c[j].sf==s1 && c[j].ss==s2){return 1;}
         else{c[j].sf=s1; c[j].ss=s2;}
     }
