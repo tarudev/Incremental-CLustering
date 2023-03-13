@@ -43,11 +43,11 @@ void makeclus(vector<point> &point_array,vector<point> &cluster,int h){
 
 void print(point &coordinate){cout<<"["<<coordinate.sf<<","<<coordinate.ss<<"]";}
 
-void printa(vector<point> &point_array){
+void print_points(vector<point> &point_array){
     for(int i1=0;i1<point_array.size();i1++){cout<<"["<<point_array[i1].sf<<","<<point_array[i1].ss<<"]"; cout<<"\n";}
 }
 
-void printw(vector<point> &point_array){
+void print_centroid(vector<point> &point_array){
     for(int i1=0;i1<point_array.size();i1++){cout<<"Centroid "<<i1+1<<" ["<<point_array[i1].sf<<","<<point_array[i1].ss<<"]"; cout<<"\n";}
 }
 //function to update centroids and return a check value
@@ -70,7 +70,7 @@ int centroid(vector<point> &point_array,vector<point> &cluster){
 }
 }
 
-void addp(double x,double y,vector<point> &all_points){
+void add_point(double x,double y,vector<point> &all_points){
     point coordinate;
     coordinate.f=-1; coordinate.sf=x; coordinate.ss=y;
     all_points.push_back(w);
