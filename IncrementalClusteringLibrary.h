@@ -13,105 +13,105 @@ using namespace std;
 typedef pair<double,double> co;
 typedef pair<int,co> point;
 
-double dist(point x,point y){
+double distance(point x,point y){
    double s=sqrt(pow(x.sf-y.sf,2)+pow(x.ss-y.ss,2));
    return s;
 }
 //procure data from string into defined data structure 
 void fetch(string &d,vector<point> &a){
-    point a2;
+    point point1;
     stringstream train(d);
     string line;
     while(getline(train,line,',')){
         stringstream s(line);
-        a2.f=0;
-        double i1,i2;
-        s>>a2.sf;s>>a2.ss;
+        point1.f=0;
+        s>>point1.sf;
+	s>>point2.ss;
         a.push_back(a2);
     } 
 }
 //initialise clusters
-void makeclus(vector<point> &a,vector<point> &c,int h){
-    point allpoin;
-    int q=a.size();
+void makeclus(vector<point> &point_array,vector<point> &cluster,int h){
+    point all_points;
+    int q=point_array.size();
     for(int i=0;i<h;i++){
-        allpoin=a[rand()%q];
-        allpoin.f=i;
-        c.push_back(allpoin);
+        all_points=point_array[rand()%q];
+        all_points.f=i;
+        cluster.push_back(allpoin);
     }
 }
 
-void print(point &a){cout<<"["<<a.sf<<","<<a.ss<<"]";}
+void print(point &coordinate){cout<<"["<<coordinate.sf<<","<<coordinate.ss<<"]";}
 
-void printa(vector<point> &a){
-    for(int i1=0;i1<a.size();i1++){cout<<"["<<a[i1].sf<<","<<a[i1].ss<<"]"; cout<<"\n";}
+void printa(vector<point> &point_array){
+    for(int i1=0;i1<point_array.size();i1++){cout<<"["<<point_array[i1].sf<<","<<point_array[i1].ss<<"]"; cout<<"\n";}
 }
 
-void printw(vector<point> &a){
-    for(int i1=0;i1<a.size();i1++){cout<<"Centroid "<<i1+1<<" ["<<a[i1].sf<<","<<a[i1].ss<<"]"; cout<<"\n";}
+void printw(vector<point> &point_array){
+    for(int i1=0;i1<point_array.size();i1++){cout<<"Centroid "<<i1+1<<" ["<<point_array[i1].sf<<","<<point_array[i1].ss<<"]"; cout<<"\n";}
 }
 //function to update centroids and return a check value
-int centroid(vector<point> &a,vector<point> &c){
-    #pragma omp parallel shared(a,c) private(i,j,1,s2,q)
+int centroid(vector<point> &point_array,vector<point> &cluster){
+    #pragma omp parallel shared(point_array,cluster) private(i,j,1,s2,q)
   {
 	  #pragma omp for
     for(int j=0;j<c.size();j++){
         double s1=0,s2=0;
         int q=0;
-        for(int i=0;i<a.size();i++){
-            if(a[i].f==j){s1+=a[i].sf;s2+=a[i].ss;q++;}
+        for(int i=0;i<point_array.size();i++){
+            if(point_array[i].f==j){s1+=point_array[i].sf;s2+=point_array[i].ss;q++;}
         }
         s1=s1/q;  s2=s2/q;
 	    #pragma omp critical
-        if(c[j].sf==s1 && c[j].ss==s2){return 1;}
-        else{c[j].sf=s1; c[j].ss=s2;}
+        if(cluster[j].sf==s1 && cluster[j].ss==s2){return 1;}
+        else{cluster[j].sf=s1; cluster[j].ss=s2;}
     }
     return 0;
 }
 }
 
-void addp(double x,double y,vector<point> &ap){
-    point w;
-    w.f=-1; w.sf=x; w.ss=y;
-    ap.push_back(w);
+void addp(double x,double y,vector<point> &all_points){
+    point coordinate;
+    coordinate.f=-1; coordinate.sf=x; coordinate.ss=y;
+    all_points.push_back(w);
 }
 //allocate data to the respective nearest centroids 
-void nearclusallo(vector<point> &a,vector<point> &c){
+void near_cluster_alloted(vector<point> &all_points,vector<point> &cluster){
     #pragma omp parallel shared(a,c) private(i,j,s,q)
   {
 	  #pragma omp for
-    for(int i=0;i<a.size();i++){
+    for(int i=0;i<all_points.size();i++){
         double s=INT_MAX;
-        for(int j=0;j<c.size();j++){
-            double q=dist(a[i],c[j]);
-            if(q<s){s=q; a[i].f=c[j].f; }
+        for(int j=0;j<cluster.size();j++){
+            double displacement=dist(all_points[i],cluster[j]);
+            if(displacement<s){s=displacement; all_points[i].f=cluster[j].f; }
         }
     }
 }
 }
 // incremental part update centroid
-void ccentroid(int j,vector<point> &ap,vector<point> &c){
+void c_centroid(int j,vector<point> &all_points,vector<point> &cluster){
     double s1=0,s2=0;
     int q=0;
-    for(int i=0;i<ap.size();i++){
-        if(ap[i].f==j){s1+=ap[i].sf;s2+=ap[i].ss;q++;}
+    for(int i=0;i<all_points.size();i++){
+        if(all_points[i].f==j){s1+=all_points[i].sf;s2+=all_points[i].ss;q++;}
     }
     s1=s1/q;  s2=s2/q;
-    c[j].sf=s1; c[j].ss=s2;
+    cluster[j].sf=s1; cluster[j].ss=s2;
 }
 //incremental cluster allocation
-void nearclusalloincre(point &a,vector<point> &c){
+void near_cluster_alloted_incremental(point &a,vector<point> &c){
     double s=INT_MAX;
     for(int j=0;j<c.size();j++){
-        double q=dist(a,c[j]);
+        double q=distance(a,c[j]);
         if(q<s){s=q; a.f=c[j].f; }
     }
 }
 //printing the clusters
-void cluspoint(vector<point> &a,int k){
+void clusterpoint(vector<point> &all_points,int k){
     for(int i=0;i<k;i++){
         cout<<"Cluster "<<i+1<<" ";
-        for(int j=0;j<a.size();j++){if(a[j].f==i)print(a[j]);}
+        for(int j=0;j<all_points.size();j++){if(all_points[j].f==i)print(all_points[j]);}
         cout<<"\n";
     }
 }
